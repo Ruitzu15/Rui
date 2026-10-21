@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rui | 元氣騎士個人檔案</title>
+  <meta name="description" content="Rui 的個人自我介紹履歷網頁 - 元氣騎士，熱愛貓戰、Free Fire 與元氣騎士，點燃火焰熱血冒險！">
+  
+  <!-- Google Fonts: Cinzel for Knight aesthetics & Noto Sans TC for clean Chinese text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       CSS Variables & Reset - 騎士風格與火焰紅色調
+       ========================================================================== */
+    :root {
+      --primary-red: #ff2a2a;
+      --flame-orange: #ff5d22;
+      --flame-gold: #ffaa00;
+      --flame-glow: rgba(255, 42, 42, 0.5);
+      --flame-subtle: rgba(255, 60, 60, 0.15);
+      
+      --bg-dark: #0b0c10;
+      --bg-surface: #14161f;
+      --bg-card: rgba(22, 25, 36, 0.82);
+      --bg-card-hover: rgba(30, 34, 49, 0.95);
+      
+      --border-dark: rgba(255, 65, 65, 0.25);
+      --border-active: rgba(255, 90, 50, 0.8);
+      
+      --text-main: #f5f6fa;
+      --text-muted: #9ba3b4;
+      --text-gold: #ffd166;
+      
+      --font-display: 'Cinzel', serif;
+      --font-body: 'Noto Sans TC', sans-serif;
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    /* 背景粒子畫布與漸層光暈 */
+    #ember-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-glow {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      max-width: 1200px;
+      height: 600px;
+      background: radial-gradient(circle at 50% 10%, rgba(255, 42, 42, 0.22) 0%, rgba(255, 93, 34, 0.08) 40%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ==========================================================================
+       導覽列 Navigation Bar
+       ========================================================================== */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(11, 12, 16, 0.75);
+      border-bottom: 1px solid rgba(255, 42, 42, 0.2);
+      transition: var(--transition);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+    }
+
+    .logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 900;
+      font-family: var(--font-display);
+      letter-spacing: 2px;
+      font-size: 1.25rem;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      fill: var(--primary-red);
+      filter: drop-shadow(0 0 8px var(--primary-red));
+      animation: pulse-fire 2.5s infinite alternate;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: var(--transition);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      background: var(--flame-subtle);
+      text-shadow: 0 0 10px var(--primary-red);
+    }
+
+    /* ==========================================================================
+       英雄橫幅 Hero Section
+       ========================================================================== */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    /* 騎士徽章外框 */
+    .crest-wrapper {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .crest-ring {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255, 75, 43, 0.6);
+      animation: spin-clockwise 24s linear infinite;
+    }
+
+    .crest-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 42, 42, 0.45) 0%, transparent 70%);
+      filter: blur(12px);
+      animation: pulse-fire 2s infinite alternate;
+    }
+
+    .crest-avatar {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #1f2330, #101217);
+      border: 3px solid var(--primary-red);
+      box-shadow: 0 0 25px rgba(255, 42, 42, 0.5), inset 0 0 15px rgba(255, 42, 42, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .knight-svg {
+      width: 85px;
+      height: 85px;
+      fill: #ffffff;
+      filter: drop-shadow(0 4px 10px rgba(255, 42, 42, 0.8));
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 42, 42, 0.15);
+      border: 1px solid rgba(255, 42, 42, 0.45);
+      color: var(--flame-gold);
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      box-shadow: 0 0 16px rgba(255, 42, 42, 0.2);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 4.8rem);
+      font-weight: 900;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, #ffffff 20%, #ff8866 50%, #ff2a2a 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 35px rgba(255, 42, 42, 0.4);
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+
+    .hero-tagline {
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .hero-tagline .highlight {
+      color: var(--flame-gold);
+      text-shadow: 0 0 12px rgba(255, 170, 0, 0.6);
+      position: relative;
+    }
+
+    .hero-quote {
+      max-width: 620px;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 34px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 28px;
+      border-radius: var(--radius-md);
+      font-size: 0.98rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition);
+      font-family: var(--font-body);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ff2a2a, #ff5722);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(255, 42, 42, 0.45);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: 0.5s;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(255, 42, 42, 0.7);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 60, 60, 0.4);
+      color: #fff;
+      backdrop-filter: blur(8px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 42, 42, 0.15);
+      border-color: var(--primary-red);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(255, 42, 42, 0.25);
+    }
+
+    /* ==========================================================================
+       RPG 戰力面板 / 狀態 HUD
+       ========================================================================== */
+    .status-panel {
+      margin-top: 50px;
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-lg);
+      padding: 24px 30px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    .status-panel::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary-red), transparent);
+    }
+
+    .hud-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 20px;
+      font-size: 0.88rem;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+
+    .hud-header span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--flame-gold);
+      font-weight: 700;
+    }
+
+    .hud-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .hud-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .hud-label {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .hud-label strong {
+      color: #fff;
+    }
+
+    .hud-bar {
+      height: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    .hud-bar-fill {
+      height: 100%;
+      border-radius: 20px;
+      background: linear-gradient(90deg, var(--flame-orange), var(--primary-red));
+      box-shadow: 0 0 10px var(--primary-red);
+      position: relative;
+      transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ==========================================================================
+       通用區塊標題
+       ========================================================================== */
+    .section {
+      padding: 85px 0 30px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 0.84rem;
+      font-family: var(--font-display);
+      letter-spacing: 3px;
+      color: var(--primary-red);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 900;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      letter-spacing: 1px;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-top: 8px;
+    }
+
+    /* ==========================================================================
+       興趣冒險卡片 (3 大愛好)
+       ========================================================================== */
+    .hobbies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 26px;
+    }
+
+    .hobby-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-lg);
+      padding: 32px 26px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .hobby-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--primary-red), transparent);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .hobby-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--border-active);
+      box-shadow: 0 20px 40px rgba(255, 42, 42, 0.22), 0 0 20px rgba(255, 42, 42, 0.15);
+      background: var(--bg-card-hover);
+    }
+
+    .hobby-card:hover::before {
+      opacity: 1;
+    }
+
+    .hobby-icon-wrap {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 42, 42, 0.1);
+      border: 1px solid rgba(255, 42, 42, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 22px;
+      box-shadow: 0 0 15px rgba(255, 42, 42, 0.2);
+      transition: var(--transition);
+    }
+
+    .hobby-card:hover .hobby-icon-wrap {
+      transform: scale(1.1) rotate(5deg);
+      border-color: var(--flame-orange);
+      box-shadow: 0 0 22px var(--flame-glow);
+    }
+
+    .hobby-tag {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--flame-gold);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .hobby-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hobby-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      flex-grow: 1;
+      margin-bottom: 20px;
+    }
+
+    .hobby-stats {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .hobby-stats strong {
+      color: var(--flame-orange);
+    }
+
+    /* ==========================================================================
+       技能修煉 (擅長或想學的技能)
+       ========================================================================== */
+    .skill-showcase {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.45);
+      position: relative;
+    }
+
+    .skill-main-goal {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      padding-bottom: 34px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 34px;
+    }
+
+    .goal-emblem {
+      width: 90px;
+      height: 90px;
+      min-width: 90px;
+      background: radial-gradient(circle, rgba(255, 42, 42, 0.3) 0%, rgba(20, 24, 34, 0.9) 80%);
+      border: 2px solid var(--primary-red);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 25px rgba(255, 42, 42, 0.4);
+    }
+
+    .goal-emblem svg {
+      width: 48px;
+      height: 48px;
+      fill: #ffaa00;
+      filter: drop-shadow(0 0 10px rgba(255, 170, 0, 0.7));
+    }
+
+    .goal-info h3 {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .goal-info .rank-badge {
+      font-size: 0.78rem;
+      background: linear-gradient(135deg, var(--flame-gold), var(--flame-orange));
+      color: #0b0c10;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .goal-info p {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+    }
+
+    .skills-breakdown {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+    }
+
+    .skill-card {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 20px;
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+    }
+
+    .skill-card:hover {
+      border-color: rgba(255, 42, 42, 0.4);
+      background: rgba(255, 42, 42, 0.05);
+    }
+
+    .skill-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .skill-meta span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       作品與榮耀里程碑 (活動歷程)
+       ========================================================================== */
+    .timeline {
+      position: relative;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 20px 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 32px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--primary-red) 0%, rgba(255, 42, 42, 0.2) 100%);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 80px;
+      margin-bottom: 40px;
+    }
+
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline-marker {
+      position: absolute;
+      left: 17px;
+      top: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #0b0c10;
+      border: 3px solid var(--primary-red);
+      box-shadow: 0 0 15px var(--primary-red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .timeline-marker-inner {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--flame-gold);
+      animation: pulse-fire 1.8s infinite alternate;
+    }
+
+    .timeline-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .timeline-content:hover {
+      border-color: var(--border-active);
+      transform: translateX(6px);
+      box-shadow: 0 15px 35px rgba(255, 42, 42, 0.2);
+    }
+
+    .event-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--flame-gold);
+      background: rgba(255, 170, 0, 0.12);
+      border: 1px solid rgba(255, 170, 0, 0.35);
+      padding: 4px 12px;
+      border-radius: 30px;
+      margin-bottom: 12px;
+    }
+
+    .timeline-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .timeline-desc {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .timeline-highlights {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .highlight-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      color: #e0e4ef;
+    }
+
+    /* ==========================================================================
+       元氣打氣站 (互動彩蛋模組)
+       ========================================================================== */
+    .energy-station {
+      background: linear-gradient(145deg, rgba(25, 18, 22, 0.9), rgba(15, 17, 24, 0.9));
+      border: 2px solid var(--border-dark);
+      border-radius: var(--radius-lg);
+      padding: 45px 30px;
+      text-align: center;
+      margin: 60px 0 30px;
+      position: relative;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(255, 42, 42, 0.1);
+      overflow: hidden;
+    }
+
+    .energy-btn {
+      background: linear-gradient(135deg, #ff2a2a, #ff7b00);
+      border: none;
+      color: #fff;
+      padding: 16px 38px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(255, 42, 42, 0.5);
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-body);
+      margin-top: 20px;
+      user-select: none;
+    }
+
+    .energy-btn:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 40px rgba(255, 60, 0, 0.85);
+    }
+
+    .energy-btn:active {
+      transform: scale(0.97);
+    }
+
+    .energy-counter {
+      font-size: 1.3rem;
+      color: var(--flame-gold);
+      font-weight: 900;
+      margin-top: 15px;
+      font-family: var(--font-display);
+      letter-spacing: 2px;
+    }
+
+    /* ==========================================================================
+       頁尾 Footer
+       ========================================================================== */
+    footer {
+      border-top: 1px solid rgba(255, 42, 42, 0.2);
+      padding: 45px 0 35px;
+      text-align: center;
+      position: relative;
+      background: #090a0d;
+      margin-top: 40px;
+    }
+
+    .footer-quote {
+      font-family: var(--font-display);
+      color: #fff;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .footer-copy {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    /* ==========================================================================
+       捲動淡入動畫 (Scroll Reveal Animations)
+       ========================================================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 延遲觸發 */
+    .delay-1 { transition-delay: 0.15s; }
+    .delay-2 { transition-delay: 0.3s; }
+    .delay-3 { transition-delay: 0.45s; }
+
+    /* ==========================================================================
+       Keyframes & Animations
+       ========================================================================== */
+    @keyframes pulse-fire {
+      0% {
+        filter: drop-shadow(0 0 6px rgba(255, 42, 42, 0.6));
+      }
+      100% {
+        filter: drop-shadow(0 0 18px rgba(255, 100, 42, 0.95));
+      }
+    }
+
+    @keyframes spin-clockwise {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* 浮動點贊火焰愛心 */
+    .flying-spark {
+      position: fixed;
+      pointer-events: none;
+      font-size: 1.5rem;
+      animation: float-up 1.2s ease-out forwards;
+      z-index: 999;
+    }
+
+    @keyframes float-up {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(0.8);
+      }
+      50% {
+        opacity: 0.9;
+        transform: translate(calc(-50% + (var(--rand-x) * 1px)), -60px) scale(1.3);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + (var(--rand-x) * 2px)), -130px) scale(0.5);
+      }
+    }
+
+    /* ==========================================================================
+       響應式設計 (RWD for Mobile & Tablets)
+       ========================================================================== */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none; /* 保持行動版精簡大氣 */
+      }
+      
+      .hero {
+        padding: 50px 0 40px;
+      }
+
+      .crest-wrapper {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 24px;
+      }
+
+      .crest-avatar {
+        width: 110px;
+        height: 110px;
+      }
+
+      .knight-svg {
+        width: 65px;
+        height: 65px;
+      }
+
+      .hero-title {
+        font-size: 2.8rem;
+      }
+
+      .status-panel {
+        padding: 20px 18px;
+      }
+
+      .hud-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .skill-main-goal {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+      }
+
+      .skill-showcase {
+        padding: 26px 20px;
+      }
+
+      .timeline::before {
+        left: 20px;
+      }
+
+      .timeline-marker {
+        left: 5px;
+      }
+
+      .timeline-item {
+        padding-left: 45px;
+      }
+
+      .timeline-content {
+        padding: 22px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 背景粒子火花 Canvas -->
+  <canvas id="ember-canvas"></canvas>
+  <div class="ambient-glow"></div>
+
+  <!-- 頂部導航 -->
+  <nav>
+    <div class="container nav-inner">
+      <a href="#" class="logo-badge">
+        <svg class="logo-icon" viewBox="0 0 24 24">
+          <path d="M12 2L1 21h22L12 2zm0 3.84L19.5 19h-15L12 5.84zM11 10h2v4h-2zm0 5h2v2h-2z"/>
+        </svg>
+        <span>RUI · 騎士殿堂</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#about">關於騎士</a></li>
+        <li><a href="#skills">戰鬥技能</a></li>
+        <li><a href="#hobbies">冒險歷程</a></li>
+        <li><a href="#activity">榮譽戰役</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- 主內容容器 -->
+  <main class="container">
+
+    <!-- 英雄介紹區塊 (Hero) -->
+    <section class="hero" id="about">
+      
+      <!-- 騎士頭像徽章 -->
+      <div class="crest-wrapper reveal">
+        <div class="crest-ring"></div>
+        <div class="crest-glow"></div>
+        <div class="crest-avatar">
+          <!-- 騎士頭盔與劍聖徽章 SVG -->
+          <svg class="knight-svg" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12c0 3.53 1.84 6.64 4.63 8.42L8 16.5c-.63-.73-1-1.68-1-2.7 0-2.21 1.79-4 4-4h2c2.21 0 4 1.79 4 4 0 1.02-.37 1.97-1 2.7l1.37 3.92C20.16 18.64 22 15.53 22 12c0-5.52-4.48-10-10-10zm-1 9V9h2v2h-2zm-3 5.5l-.88 2.5C5.07 17.65 4 15 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 3-1.07 5.65-3.12 7l-.88-2.5h-8z"/>
+            <path d="M12 5l-2 5h4l-2-5z" fill="#ff4d4d"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 身分標籤 -->
+      <div class="hero-badge reveal delay-1">
+        ⚔️ 烈火守護者 · FLAME KNIGHT
+      </div>
+
+      <!-- 名字 -->
+      <h1 class="hero-title reveal delay-1">RUI</h1>
+
+      <!-- 一句話介紹 -->
+      <div class="hero-tagline reveal delay-2">
+        <span>心中的誓言：</span>
+        <span class="highlight">元氣騎士</span>
+      </div>
+
+      <p class="hero-quote reveal delay-2">
+        燃燒著永不熄滅的元氣之火，帶著騎士的榮耀與熱忱奔赴每一場戰局。
+        無論前方是強敵地牢、戰術對決還是百人戰場，我的劍鋒永遠指向勝利！
+      </p>
+
+      <!-- 按鈕動作 -->
+      <div class="hero-actions reveal delay-3">
+        <a href="#skills" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6.92 5h10.16L12 13.92 6.92 5zM2 3h20l-10 18L2 3z"/>
+          </svg>
+          查看騎士修煉
+        </a>
+        <a href="#hobbies" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5zm4 4h-2v-2h2v2zm0-4h-2V7h2v5z"/>
+          </svg>
+          探索冒險日常
+        </a>
+      </div>
+
+      <!-- 騎士 HUD 狀態面板 -->
+      <div class="status-panel reveal delay-3">
+        <div class="hud-header">
+          <span>🛡️ KNIGHT ATTRIBUTES // 戰力儀表板</span>
+          <span>⚡ STATUS: ACTIVE</span>
+        </div>
+        <div class="hud-grid">
+          <div class="hud-item">
+            <div class="hud-label">
+              <span>❤️ 生命力 (HP)</span>
+              <strong>9999 / 9999</strong>
+            </div>
+            <div class="hud-bar">
+              <div class="hud-bar-fill" style="width: 100%;"></div>
+            </div>
+          </div>
+          <div class="hud-item">
+            <div class="hud-label">
+              <span>🔥 元氣值 (Energy)</span>
+              <strong>MAX (超載充能)</strong>
+            </div>
+            <div class="hud-bar">
+              <div class="hud-bar-fill" style="width: 98%;"></div>
+            </div>
+          </div>
+          <div class="hud-item">
+            <div class="hud-label">
+              <span>⚔️ 綜合戰鬥評級</span>
+              <strong>SSS 頂級騎士</strong>
+            </div>
+            <div class="hud-bar">
+              <div class="hud-bar-fill" style="width: 95%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 技能修煉核心區塊 (Skills) -->
+    <section class="section" id="skills">
+      <div class="section-header reveal">
+        <span class="section-eyebrow">ABILITIES & MASTERY</span>
+        <h2 class="section-title">
+          <span>🗡️</span> 核心修煉與專長
+        </h2>
+        <p class="section-desc">淬鍊身心、拔劍起誓，將「元氣騎士」的稱號化為真實戰力</p>
+      </div>
+
+      <div class="skill-showcase reveal">
+        <!-- 核心終極目標 -->
+        <div class="skill-main-goal">
+          <div class="goal-emblem">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 2.18l6 2.25v4.66c0 4.14-2.73 8.01-6 9.07-3.27-1.06-6-4.93-6-9.07V6.43l6-2.25zM11 7h2v6h-2V7zm0 8h2v2h-2v-2z"/>
+            </svg>
+          </div>
+          <div class="goal-info">
+            <h3>
+              成為元氣騎士
+              <span class="rank-badge">DESTINY QUEST</span>
+            </h3>
+            <p>
+              這不僅是一個目標，更是我的最高信仰與騎士道！追求在戰鬥中擁有如烈火般旺盛的元氣、在困境中永不倒下的剛毅意志，以及保護隊友穿梭槍林彈雨的堅定實力。
+            </p>
+          </div>
+        </div>
+
+        <!-- 專項能力數值化 -->
+        <div class="skills-breakdown">
+          <div class="skill-card">
+            <div class="skill-meta">
+              <span>🔥 烈火元氣蓄能</span>
+              <span style="color: var(--flame-gold);">96%</span>
+            </div>
+            <div class="hud-bar">
+              <div class="hud-bar-fill" style="width: 96%;"></div>
+            </div>
+          </div>
+          <div class="skill-card">
+            <div class="skill-meta">
+              <span>🏹 戰術走位與閃避</span>
+              <span style="color: var(--flame-gold);">92%</span>
+            </div>
+            <div class="hud-bar">
+              <div class="hud-bar-fill" style="width: 92%;"></div>
+            </div>
+          </div>
+          <div class="skill-card">
+            <div class="skill-meta">
+              <span>🎯 戰場瞬息決策</span>
+              <span style="color: var(--flame-gold);">89%</span>
+            </div>
+            <div class="hud-bar">
+              <div class="hud-bar-fill" style="width: 89%;"></div>
+            </div>
+          </div>
+          <div class="skill-card">
+            <div class="skill-meta">
+              <span>🛡️ 不屈之騎士意志</span>
+              <span style="color: var(--flame-gold);">100%</span>
+            </div>
+            <div class="hud-bar">
+              <div class="hud-bar-fill" style="width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 冒險日常 / 3 個興趣 (Hobbies) -->
+    <section class="section" id="hobbies">
+      <div class="section-header reveal">
+        <span class="section-eyebrow">QUESTS & LEISURE</span>
+        <h2 class="section-title">
+          <span>⚔️</span> 騎士的三大冒險戰場
+        </h2>
+        <p class="section-desc">在不同的虛擬戰場中磨練操作、培養戰略與元氣精神</p>
+      </div>
+
+      <div class="hobbies-grid">
+        <!-- 興趣 1: 玩貓戰 -->
+        <div class="hobby-card reveal delay-1">
+          <div class="hobby-icon-wrap">🐱</div>
+          <span class="hobby-tag">戰術策略 · 奇趣兵團</span>
+          <h3 class="hobby-title">
+            <span>玩貓咪大戰爭</span>
+            <span style="font-size: 0.9rem; color: var(--flame-gold);">戰略指揮</span>
+          </h3>
+          <p class="hobby-desc">
+            指揮各具異能與搞怪特質的貓咪軍團！在攻防拉鋸與金幣資源管控中，運用精準的兵種派遣與大砲時機，攻克各大狂亂關卡與傳奇魔王。
+          </p>
+          <div class="hobby-stats">
+            <span>戰略大腦</span>
+            <strong>兵團司令級 ★★★★★</strong>
+          </div>
+        </div>
+
+        <!-- 興趣 2: 玩 Free Fire -->
+        <div class="hobby-card reveal delay-2">
+          <div class="hobby-icon-wrap">🔥</div>
+          <span class="hobby-tag">熱血求生 · 極限射擊</span>
+          <h3 class="hobby-title">
+            <span>玩 Free Fire</span>
+            <span style="font-size: 0.9rem; color: var(--flame-gold);">生存精英</span>
+          </h3>
+          <p class="hobby-desc">
+            跳傘空降荒島，在收窄的毒圈與槍林彈雨中保持冷靜。敏銳的聽聲辨位、快如閃電的凝膠護盾搭建與精準壓槍，體驗殘局翻盤的極致心跳！
+          </p>
+          <div class="hobby-stats">
+            <span>身手反應</span>
+            <strong>吃雞王者風範 ★★★★★</strong>
+          </div>
+        </div>
+
+        <!-- 興趣 3: 玩元氣騎士 -->
+        <div class="hobby-card reveal delay-3">
+          <div class="hobby-icon-wrap">🛡️</div>
+          <span class="hobby-tag">地牢探險 · 本命之作</span>
+          <h3 class="hobby-title">
+            <span>玩元氣騎士</span>
+            <span style="font-size: 0.9rem; color: var(--flame-gold);">核心本命</span>
+          </h3>
+          <p class="hobby-desc">
+            探索深不見底的隨機地牢！手持各色光劍與神器法杖，精巧躲避滿屏密集的彈幕狂潮，奪回維繫世界平衡的魔法石，真正體現元氣騎士的冒險靈魂。
+          </p>
+          <div class="hobby-stats">
+            <span>本命同步率</span>
+            <strong>超次元共鳴 100%</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 活動與榮譽經歷 (Activity) -->
+    <section class="section" id="activity">
+      <div class="section-header reveal">
+        <span class="section-eyebrow">HALL OF GLORY</span>
+        <h2 class="section-title">
+          <span>🏆</span> 戰役與榮譽歷程
+        </h2>
+        <p class="section-desc">一步一腳印走出的騎士傳奇</p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item reveal">
+          <div class="timeline-marker">
+            <div class="timeline-marker-inner"></div>
+          </div>
+          <div class="timeline-content">
+            <span class="event-badge">⚔️ 榮譽里程碑 · 資格試煉</span>
+            <h3 class="timeline-title">
+              參加元氣騎士甄選
+            </h3>
+            <p class="timeline-desc">
+              帶著對元氣騎士的純粹熱愛與自豪，毅然報名並投身「元氣騎士甄選」考核！在眾多競爭者與高標準挑戰中，展現無懼險阻的膽識、出色的應變潛力與堅韌信念，成功留下屬於 Rui 的榮耀印記。
+            </p>
+            <div class="timeline-highlights">
+              <span class="highlight-pill">🔥 敢於挑戰</span>
+              <span class="highlight-pill">🛡️ 騎士風範獲得認證</span>
+              <span class="highlight-pill">⚡ 元氣滿點展現</span>
+              <span class="highlight-pill">🌟 邁向頂尖之階</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 趣味互動：為 Rui 注入元氣 -->
+      <div class="energy-station reveal">
+        <h3 style="font-size: 1.6rem; color: #fff; margin-bottom: 8px;">
+          🔥 騎士戰力集氣站
+        </h3>
+        <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto;">
+          覺得 Rui 充滿熱血與騎士精神嗎？點擊下方按鈕，為 Rui 的元氣槽注入澎湃烈火吧！
+        </p>
+        <button class="energy-btn" id="boost-btn">
+          <span>⚔️ 為 Rui 注入元氣！</span>
+        </button>
+        <div class="energy-counter">
+          當前累積元氣值：<span id="energy-count">8888</span> <span style="font-size: 0.9rem;">PTS</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 頁尾 -->
+  <footer>
+    <div class="container">
+      <p class="footer-quote">
+        "FOR HONOR, FOR FLAME, FOR THE SOUL KNIGHT."
+      </p>
+      <p class="footer-copy">
+        © 2026 Rui. All Rights Reserved. · 願火焰引領前行的方向
+      </p>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       Javascript 互動與動畫邏輯
+       ========================================================================== -->
+  <script>
+    /* ------------------------------------------------------------------------
+       1. 捲動淡入動畫 (Scroll Reveal with Intersection Observer)
+       ------------------------------------------------------------------------ */
+    document.addEventListener('DOMContentLoaded', () => {
+      const revealElements = document.querySelectorAll('.reveal');
+      
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            // 一旦觸發後即可停止監聽，提高效能
+            obs.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      revealElements.forEach(el => observer.observe(el));
+    });
+
+    /* ------------------------------------------------------------------------
+       2. 火焰餘燼背景 Canvas 動畫 (Flame Embers Particle Background)
+       ------------------------------------------------------------------------ */
+    const canvas = document.getElementById('ember-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const particles = [];
+    const PARTICLE_COUNT = 45;
+
+    class EmberParticle {
+      constructor() {
+        this.reset(true);
+      }
+
+      reset(init = false) {
+        this.x = Math.random() * width;
+        this.y = init ? Math.random() * height : height + 10;
+        this.size = Math.random() * 2.6 + 0.8;
+        this.speedY = Math.random() * 1.2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.8;
+        this.opacity = Math.random() * 0.7 + 0.2;
+        this.fade = Math.random() * 0.005 + 0.003;
+        // 火焰色系分佈：紅、橙、金
+        const colors = ['#ff2a2a', '#ff5d22', '#ff9900', '#ff3b30'];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
+
+      update() {
+        this.y -= this.speedY;
+        this.x += this.speedX;
+        this.opacity -= this.fade;
+
+        if (this.opacity <= 0 || this.y < -10) {
+          this.reset();
+        }
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.opacity);
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(new EmberParticle());
+    }
+
+    function animateEmber() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateEmber);
+    }
+    animateEmber();
+
+    /* ------------------------------------------------------------------------
+       3. 為 Rui 注入元氣互動按鈕 (Interactive Energy Boost)
+       ------------------------------------------------------------------------ */
+    const boostBtn = document.getElementById('boost-btn');
+    const energyCountEl = document.getElementById('energy-count');
+    let energyCount = 8888;
+
+    boostBtn.addEventListener('click', (e) => {
+      // 增加元氣數值
+      const add = Math.floor(Math.random() * 25) + 15;
+      energyCount += add;
+      energyCountEl.textContent = energyCount.toLocaleString();
+
+      // 按鈕脈衝震動
+      boostBtn.style.transform = 'scale(1.12)';
+      setTimeout(() => {
+        boostBtn.style.transform = '';
+      }, 150);
+
+      // 產生向上飄散的火焰/劍符號
+      const rect = boostBtn.getBoundingClientRect();
+      const spark = document.createElement('div');
+      spark.className = 'flying-spark';
+      
+      const emojis = ['🔥', '⚔️', '🛡️', '⚡', '✨'];
+      spark.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      
+      spark.style.left = `${e.clientX || (rect.left + rect.width / 2)}px`;
+      spark.style.top = `${e.clientY || rect.top}px`;
+      spark.style.setProperty('--rand-x', (Math.random() * 80 - 40));
+
+      document.body.appendChild(spark);
+      setTimeout(() => spark.remove(), 1200);
+    });
+  </script>
+</body>
+</html>
